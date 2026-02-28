@@ -3,25 +3,24 @@ const pool = require("./config/db");
 
 const app = express();
 
+const complaintsRoutes = require("./routes/complaints");
+
+// THIS MUST COME FIRST
 app.use(express.json());
+
+app.use("/complaints", complaintsRoutes);
 
 // Test route
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");
 });
 
-// Test database route
+// Test DB route
 app.get("/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Database connection failed ❌");
-  }
+  const result = await pool.query("SELECT NOW()");
+  res.json(result.rows[0]);
 });
 
-// Start server
 app.listen(5000, () => {
   console.log("Server running on port 5000 ✅");
 });
